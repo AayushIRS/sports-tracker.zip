@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sports Equipment Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    form, table { max-width: 800px; margin: auto; }
+    input, select, button { margin: 5px 0; padding: 8px; width: 100%; }
+    table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h1>Sports Equipment Tracker</h1>
+
+  <form id="issueForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required />
+
+    <label for="equipment">Equipment Type:</label>
+    <select id="equipment" required>
+      <option value="Badminton Racket">Badminton Racket</option>
+      <option value="Football">Football</option>
+      <option value="Cricket Bat">Cricket Bat</option>
+      <option value="Volleyball">Volleyball</option>
+    </select>
+
+    <label for="equipmentId">Equipment ID (e.g., Racket #3):</label>
+    <input type="text" id="equipmentId" required />
+
+    <button type="submit">Issue Equipment</button>
+  </form>
+
+  <h2 style="text-align:center">Issued Equipment Log</h2>
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Equipment</th>
+        <th>ID</th>
+        <th>Issued At</th>
+        <th>Returned At</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('issueForm');
+    const tableBody = document.querySelector('#logTable tbody');
+    const records = [];
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const equipment = document.getElementById('equipment').value;
+      const equipmentId = document.getElementById('equipmentId').value;
+      const issuedAt = new Date().toLocaleString();
+      const returnedAt = '';
+
+      const record = { name, equipment, equipmentId, issuedAt, returnedAt };
+      records.push(record);
+      renderTable();
+      form.reset();
+    });
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      records.forEach((rec, index) => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td>${rec.name}</td>
+          <td>${rec.equipment}</td>
+          <td>${rec.equipmentId}</td>
+          <td>${rec.issuedAt}</td>
+          <td>${rec.returnedAt || '-'}</td>
+          <td>
+            <button onclick="markReturned(${index})" ${rec.returnedAt ? 'disabled' : ''}>
+              Mark Returned
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function markReturned(index) {
+      records[index].returnedAt = new Date().toLocaleString();
+      renderTable();
+    }
+  </script>
+</body>
+</html>
